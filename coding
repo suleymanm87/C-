@@ -1,0 +1,24 @@
+#include <iostream>
+
+int main() {
+
+	int a, b, result;
+
+	std::cout << "Enter 2 numbers " << std::endl;
+	std::cin >> a >> b;
+
+	result = a + b;
+	std::cout << "The Sum is " << result << std::endl;
+
+	result = a - b;
+	std::cout << "The difference is " << result << std::endl;
+
+	result = a * b;
+	std::cout << "The product is " << result << std::endl;
+
+	result = a / b;
+	std::cout << "The quotient is " << result << std::endl;
+
+
+	return 0;
+}
