@@ -1,0 +1,544 @@
+					.CPP File							
+Main.cpp
+
+#include<iostream>
+#include"Account.h"
+#include"CashPayment.h"
+#include"Checkingaccount.h"
+#include"CreditCardPayment.h"
+#include"Payment.h"
+#include"Person.h"
+#include"SavingsAccount.h"
+
+int main()
+
+{
+    //creates two Person object
+    cout << "-----------------DETAILS--------------" << endl;
+    cout << "--------------------------------------" << endl;
+
+    Person p1("John", 321654987);
+    std::cout << "The name of the person: " << p1.getName() << std::endl;
+    std::cout << "The ID of the person: " << p1.getID();
+    std::cout << endl;
+
+    //creates an Account object
+    Account acc(45000.9);
+
+    //set the account number to the person 1
+    p1.setAccountObj(acc);
+
+   
+    //creates two CashPayment objects
+    CashPayment cp1(500.0, "Car payment");
+
+    //call paymentDetails to display
+    cp1.paymentDetails();
+    cout << endl;
+    cout << "--------------------------------------" << endl;
+
+    //creates a Person object
+    Person p2("Edward", 987654321);
+    cout << "The name of the person: " << p2.getName() << endl;
+    cout << "The ID of the person: " << p2.getID();
+  
+    //creates an Account object
+    Account acc2(85000.56);
+
+    //set the account number to the person 1
+    p2.setAccountObj(acc2);
+    cout << endl;
+
+    //call paymentDetails to display
+    CreditCardPayment cd1(100, "Shopping", "Suleyman Mulayim", "11/6/2030", "4532568987984566");
+    cd1.paymentDetails();
+
+    return 0;
+
+}
+Account.cpp
+#include "account.h"
+
+Account::Account()
+{
+	balance = 0; 
+}
+
+Account::Account(double bal)
+{
+	//Check validity of balance
+	if (bal >= 0)
+	{
+		balance = bal;
+	}
+	else
+	{
+
+		std::cout << "\nInitial balance was invalid";
+		balance = 0.0;
+	}
+
+}
+
+void Account::credit(double amount)
+{
+	balance = balance + amount;
+}
+bool Account::debit(double amount)
+{
+	//check if amount is valid
+	if (amount > balance)
+	{
+		std::cout << "\nThe balance is less than the debit amount";
+		return false;
+	}
+	else
+	{
+		balance = balance - amount;
+		return true;
+	}
+}
+
+double Account::getBalance()
+{
+	return balance;
+}
+
+CashPayment.cpp
+#include "CashPayment.h"
+
+CashPayment::CashPayment() : Payment()
+{
+
+}
+
+CashPayment::CashPayment(float amt, string type) : Payment(amt, type)
+{
+
+}
+
+void CashPayment::paymentDetails()
+{
+
+    cout << "The cash payment amount is: " << getPayment() << endl;
+
+    cout << "The type of the payment is: " << getBillType() << endl;
+
+}
+
+CheckingAccount.cpp
+#include "checkingaccount.h"
+
+Checking_Account::Checking_Account(double bal, double feeTrans) : Account(bal)
+{
+	fee = feeTrans;
+}
+
+void Checking_Account::credit(double amount)
+{
+    // Reducing fee per transaction from amount and credit it to the accoubt
+    amount = amount - fee;
+    Account::credit(amount);
+}
+
+bool Checking_Account::debit(double amount)
+{
+    // Checking amount can be withdrawn
+    if (Account::debit(amount)) {
+        // Deducing fee from balance
+        balance -= fee;
+        return true;
+    }
+    else {
+        return false;
+    }
+};
+
+
+CreditCardPayment.cpp
+#include "CreditCardPayment.h"
+
+CreditCardPayment::CreditCardPayment() : Payment()
+{
+    credit_name = "";
+
+    expirationDate = "";
+
+    creditcard_num = "";
+}
+
+CreditCardPayment::CreditCardPayment(float amt, string type, string name, string expiration, string creditcard)
+    : Payment(amt, type)
+
+{
+
+    credit_name = name;
+
+    expirationDate = expiration;
+
+    creditcard_num = creditcard;
+
+}
+
+void CreditCardPayment::paymentDetails()
+
+{
+
+    cout << "The credit card payment amount is: " << getPayment() << endl;
+    cout << "The type of the payment is: " << getBillType() << endl;
+    cout << endl;
+    cout << "--------------------------------------" << endl;
+    cout << "The name on the credit card is: " << credit_name << endl;
+
+    cout << "The expiration date on credit card is: " << expirationDate << endl;
+
+    cout << "The credit card number is: " << creditcard_num << endl;
+    cout << endl;
+    cout << "--------------------------------------" << endl;
+}
+
+Payment.cpp
+#include "Payment.h"
+
+Payment::Payment()
+{
+    amount = 0;
+    billType = "";
+}
+Payment::Payment(float amt, string type)
+{
+    amount = amt;
+    billType = type;
+}
+void Payment::setPayment(float amt)
+{
+    amount = amt;
+}
+float Payment::getPayment()
+{
+    return amount;
+}
+void Payment::setBillType(string type)
+{
+    billType = type;
+}
+string Payment::getBillType()
+{
+    return billType;
+}
+void Payment::paymentDetails()
+{
+    std::cout << "The payment amount is : " << amount << std::endl;
+    std::cout << "The payment type is : " << billType << std::endl;
+}
+
+
+Person.cpp
+#include "Person.h"
+
+Person::Person()
+
+{
+
+    personName = "";
+
+    id_number = 0;
+
+}
+
+Person::Person(std::string name, long id)
+{
+
+    personName = name;
+
+    id_number = id;
+
+}
+
+void Person::setName(std::string name)
+{
+
+    personName = name;
+
+}
+std::string Person::getName()
+{
+
+    return personName;
+
+}
+
+void Person::setID(long id)
+{
+
+    id_number = id;
+
+}
+
+long Person::getID()
+{
+
+    return id_number;
+
+}
+
+void Person::setAccountObj(Account acc)
+{
+
+    account = acc;
+
+}
+
+Account Person::getAccountObj()
+{
+
+    return account;
+
+}
+
+
+SavingsAccount.cpp
+#include "savingsAccount.h"
+
+Savings_Account::Savings_Account(double bal, double rate) : Account(bal)
+{
+	interestRate = rate;
+}
+
+double Savings_Account::calculateInterest()
+{
+	return balance * (interestRate / 100);
+}
+void Savings_Account::credit(double amount)
+{
+	balance = balance + amount;
+}
+bool Savings_Account::debit(double amount)
+{
+	//check if amount is valid
+	if (amount > balance)
+	{
+		std::cout << "\nThe balance is less than the debit amount";
+		return false;
+	}
+	else
+	{
+		balance = balance - amount;
+		return true;
+	}
+}
+					.H File							
+Account.h
+
+#pragma once
+#include<iostream>
+
+//Define base class Account
+class Account
+{
+protected:
+	//data member to hold balance
+	double balance; 
+
+public:
+	Account(); 
+	//Parameterized constructor for initial balance
+	Account(double bal);
+	//member function to credit the amount to account balance
+	virtual void credit(double amount);
+//member function to debit amount from account balance
+	virtual bool debit(double amount);
+//member function to fetch the acccount balance
+	double getBalance();
+};
+
+CashPayment.h
+#pragma once
+#include "payment.h"
+
+//class named CashPayment that is derived from Payment.
+class CashPayment : public Payment
+{
+    //constructors
+public:
+    CashPayment();
+
+    CashPayment(float amt, string type);
+
+      //redefine the paymentDetails function to indicate that the payment is in cash.
+    void paymentDetails();
+
+};
+
+CheckingAccount.h
+#include "account.h"
+
+
+class Checking_Account : public Account
+{
+protected:
+	double fee;
+
+public:
+	//Parameterized constructor of Checking_Account which calls Parameterized constructor of Account with passing balance
+	Checking_Account(double bal, double feeTrans);
+
+
+	//member function to apply transaction fee on crediting the amount
+	void credit(double amount);
+
+
+	//member function to apply transaction fee on debiting the amount
+	bool debit(double amount);
+};
+CreditCardPayment.h
+#pragma once
+#include "payment.h"
+
+//class named CreditCardPayment that is derived from Payment.
+class CreditCardPayment : public Payment
+
+{
+    // member variables for the name on the card, expiration date,
+    //and credit card number.
+private: string credit_name;
+
+       string expirationDate;
+
+       string creditcard_num;
+
+public:
+
+    //constructor
+    CreditCardPayment();
+
+    CreditCardPayment(float amt, string type, string name, string expiration, string creditcard);
+
+    //redefine the paymentDetails function
+    //to include all credit card information in the printout.
+    void paymentDetails();
+
+};
+
+Payment.h
+#pragma once
+#include <iostream>
+
+#include < string >
+
+using namespace std;
+
+//class named Payment
+
+class Payment
+
+{
+private:
+
+    //type float that stores the amount of the payment
+
+    float amount;
+
+    //string that store the type of payment
+
+    string billType;
+
+public:
+
+    //default constructor
+
+    Payment();
+
+    //constructor
+
+    Payment(float amt, string type);
+
+    //accessor and mutator methods.
+
+    void setPayment(float amt);
+
+    float getPayment();
+
+    void setBillType(string type);
+
+    string getBillType();
+
+    //function named paymentDetails that outputs an English sentence
+
+    //that describes the amount and type of the payment.
+
+    void paymentDetails();
+
+};
+
+
+
+
+
+
+
+
+
+
+
+Person.h
+#pragma once
+#include"Account.h"
+#include <string>
+
+//class named Person
+class Person
+
+{
+private:
+
+    //string that store the person’s name
+    std::string personName;
+
+    //long to store identification number
+    long id_number;
+
+    //Add data member, an object of Account class
+    Account account;
+
+public:
+
+    //default constructor
+    Person();
+
+    //constructor
+    Person(std::string  name, long id);
+
+    //accessor and mutator methods.
+    void setName(std::string  name);
+
+    std::string  getName();
+
+    void setID(long id);
+
+    long getID();
+
+    void setAccountObj(Account acc);
+
+    Account getAccountObj();
+};
+SavingsAccount.h
+#include <iostream>
+#include"account.h"
+
+//defined Savings_Account class with extending Account
+class Savings_Account : public Account
+{
+protected:
+	double interestRate;
+
+public:
+	//Parameterized constructor of Savings_Account which calls Parameterized constructor of Account with passing balance
+	Savings_Account(double bal, double rate);
+
+	//member function to calculate interest rate   
+	double calculateInterest();
+	void credit(double amount);
+	bool debit(double amount);
+};
+
